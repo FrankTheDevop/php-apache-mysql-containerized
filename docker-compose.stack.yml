@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  php:
+    image: fdsmedia/php:5.6
+    volumes:
+      - $YourPathToTheSourceCode:/var/www/html/
+  apache:
+    image: fdsmedia/apache:2.4.25
+    depends_on:
+      - php
+      - mysql
+    ports:
+      - "8080:8080"
+    volumes:
+      - $YourPathToTheSourceCode:/var/www/html/
+      - $YourPathToTheVhostsFolder:/usr/local/apache2/conf/vhosts
+      - $YourPathTOTheHttpd.confFolder:/usr/local/apache2/conf/httpd.conf
+  mysql:
+    image: mysql:${MYSQL_VERSION:-latest}
+    ports:
+      - "3306:3306"
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$YourRootPW
+      - MYSQL_DATABASE=$YourDatabaseName
+      - MYSQL_USER=$YourUser
+      - MYSQL_PASSWORD=$YourPW
+volumes:
+    data:
